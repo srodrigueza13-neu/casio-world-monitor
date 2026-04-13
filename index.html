@@ -558,11 +558,11 @@ if (breaking) {
 }
 
 const text = data.items
-  .slice(0,5)
-  .map(function(x){ return "▸ " + x.title; })
-  .join("        ");
+.map(function(x){ return "▸ " + x.title; })
+.join("        ");
 
-document.getElementById("ticker").innerText = text;
+document.getElementById("ticker").innerText = text + "        " + text;
+
 
 }catch(e){
 document.getElementById("ticker").innerText = "ERROR NEWS";
