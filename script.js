@@ -51,7 +51,21 @@ document.getElementById("ticker").innerText = "ERROR NEWS";
 }
 
 updateClock();
-setInterval(updateClock,1000);
+function updateWorldClocks(){
+const now = new Date();
+
+const tokyo = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
+const madrid = new Date(now.toLocaleString("en-US",{timeZone:"Europe/Madrid"}));
+
+document.getElementById("tokyo").innerText =
+"TOKYO " + tokyo.getHours().toString().padStart(2,"0") + ":" + tokyo.getMinutes().toString().padStart(2,"0");
+
+document.getElementById("madrid").innerText =
+"MADRID " + madrid.getHours().toString().padStart(2,"0") + ":" + madrid.getMinutes().toString().padStart(2,"0");
+}
+setInterval(updateWorldClocks,1000);
+updateWorldClocks();
+
 
 loadWeather();
 loadNews();
