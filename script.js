@@ -39,7 +39,7 @@ async function loadContractsReminder() {
     console.log("DATA CONTRATOS:", data);
 
     if (!data.ok || !data.next) {
-      setContractsFallback("-- --- ----", "SIN VENCIMIENTOS", "--");
+     setContractsFallback("DEBUG", "SI VES ESTO EL JS FUNCIONA", "OK");
       return;
     }
 
