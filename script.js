@@ -38,6 +38,62 @@ document.getElementById("cond").innerText = "ERROR WEATHER";
 document.getElementById("range").innerText = "NO WEATHER DATA";
 }
 }
+const CONTRACTS_URL = "https://script.google.com/macros/s/AKfycbx28ipebSpJ_ecrv7JpP60i9wzKj8FFJAPsDcUdgIUY3LoGttQl_93w-_EJzMlavlUy/exec";
+
+function pad(n) {
+  return String(n).padStart(2, "0");
+}
+
+function formatDatePretty(dateStr) {
+  const months = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+  const [day, month, year] = dateStr.split("-").map(Number);
+  return `${pad(day)} ${months[month - 1]} ${year}`;
+}
+
+function getDaysUntil(dateStr) {
+  const [day, month, year] = dateStr.split("-").map(Number);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(year, month - 1, day);
+  const diffMs = target - today;
+  return Math.floor(diffMs / 86400000);
+}
+
+async function loadContractsReminder() {
+  try {
+    const res = await fetch(CONTRACTS_URL, { cache: "no-store" });
+    const data = await res.json();
+
+    if (!data.ok || !data.next) {
+      document.getElementById("contractDate").innerText = "-- --- ----";
+      document.getElementById("contractName").innerText = "SIN VENCIMIENTOS";
+      document.getElementById("contractType").innerText = "--";
+      return;
+    }
+
+    const item = data.next;
+    const days = getDaysUntil(item.fecha);
+
+    document.getElementById("contractDate").innerText = formatDatePretty(item.fecha);
+    document.getElementById("contractName").innerText = item.trabajador.toUpperCase();
+
+    let meta = item.tipo.toUpperCase();
+    if (days === 0) {
+      meta += " · HOY";
+    } else if (days === 1) {
+      meta += " · EN 1 DÍA";
+    } else if (days > 1) {
+      meta += ` · EN ${days} DÍAS`;
+    }
+
+    document.getElementById("contractType").innerText = meta;
+
+  } catch (e) {
+    document.getElementById("contractDate").innerText = "-- --- ----";
+    document.getElementById("contractName").innerText = "ERROR";
+    document.getElementById("contractType").innerText = "--";
+  }
+}
 
 async function loadNews(){
 try{
@@ -91,9 +147,11 @@ updateClock();
 updateWorldClocks();
 loadWeather();
 loadNews();
+loadContractsReminder();
 
 setInterval(updateClock, 1000);
 setInterval(updateWorldClocks, 1000);
+setInterval(loadContractsReminder, 60000);
 
 function updateNextEvent(){
 const now = new Date();
