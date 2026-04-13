@@ -550,41 +550,24 @@ align-items: center;
           icon = "⛈️";
         }
 
-    <section class="panel">
-  <div class="panel-label">PRÓXIMO VENCIMIENTO</div>
-  <div id="contractDate" class="reminder-date">-- --- ----</div>
-  <div id="contractName" class="reminder-text">SIN VENCIMIENTOS</div>
-  <div id="contractType" class="reminder-meta">--</div>
-</section>
+        document.getElementById("temp").innerText = currentTemp + "°C";
+        document.getElementById("cond").innerText = icon + " " + label;
+        document.getElementById("range").innerText = "SAN FERNANDO, CL";
+        document.getElementById("weatherExtra").innerText = "H " + maxTemp + "° / L " + minTemp + "°";
 
-<script>
-  async function updateWeather() {
-    try {
-      // Supongamos que estas variables vienen de una API previa
-      document.getElementById("temp").innerText = currentTemp + "°C";
-      document.getElementById("cond").innerText = icon + " " + label;
-      document.getElementById("range").innerText = "SAN FERNANDO, CL";
-      document.getElementById("weatherExtra").innerText = "H " + maxTemp + "° / L " + minTemp + "°";
-
-    } catch (e) {
-      document.getElementById("temp").innerText = "--°C";
-      document.getElementById("cond").innerText = "ERROR WEATHER";
-      document.getElementById("range").innerText = "NO WEATHER DATA";
-      document.getElementById("weatherExtra").innerText = "H --° / L --°";
+      } catch (e) {
+        document.getElementById("temp").innerText = "--°C";
+        document.getElementById("cond").innerText = "ERROR WEATHER";
+        document.getElementById("range").innerText = "NO WEATHER DATA";
+        document.getElementById("weatherExtra").innerText = "H --° / L --°";
+      }
     }
-  } // <-- Faltaba cerrar la función del clima
 
-  async function loadNews() {
-    try {
-      const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
-      const res = await fetch(url);
-      const data = await res.json();
-      // ... resto de tu lógica
-    } catch (e) {
-      console.error("Error cargando noticias", e);
-    }
-  }
-</script>
+    async function loadNews() {
+      try {
+        const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
+        const res = await fetch(url);
+        const data = await res.json();
 
         if (!data.items || !data.items.length) {
           throw new Error("No news items");
