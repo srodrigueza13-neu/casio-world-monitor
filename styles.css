@@ -17,16 +17,25 @@ font-size:40px;
 margin-top:20px;
 }
 
-#ticker{
-margin-top:30px;
-font-size:18px;
-text-align:left;
-max-width:900px;
-margin-left:auto;
-margin-right:auto;
-min-height:28px;
-line-height:1.4;
-white-space:normal;
+.ticker-wrap {
+overflow: hidden;
+border: 1px solid #39414d;
+background: #171c24;
+padding: 14px 0;
+}
+
+.ticker {
+display: inline-block;
+white-space: nowrap;
+padding-left: 100%;
+animation: scrollTicker 75s linear infinite;
+font-size: 19px;
+color: #dce2ea;
+}
+
+@keyframes scrollTicker {
+from { transform: translateX(0); }
+to { transform: translateX(-100%); }
 }
 
 .world-clock{
