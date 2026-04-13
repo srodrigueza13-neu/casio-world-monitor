@@ -1,18 +1,23 @@
-export default async function handler(req,res){
+export default async function handler(req, res) {
+try {
+const r = await fetch("https://feeds.bbci.co.uk/news/world/rss.xml");
+const xml = await r.text();
 
-try{
+```
+const items = [...xml.matchAll(/<title>(.*?)<\/title>/g)]
+  .slice(2, 12)
+  .map(function(x){
+    return { title: x[1] };
+  });
 
-const r=await fetch("https://feeds.bbci.co.uk/news/world/rss.xml");
-const xml=await r.text();
+res.status(200).json({ items: items });
+```
 
-const items=[...xml.matchAll(/<title>(.*?)</title>/g)]
-.slice(2,12)
-.map(x=>({title:x}));
-
-res.status(200).json({items});
-
-}catch(e){
-res.status(500).json({error:"fail"});
+} catch (e) {
+res.status(500).json({
+items: [
+{ title: "ERROR NEWS" }
+]
+});
 }
-
 }
