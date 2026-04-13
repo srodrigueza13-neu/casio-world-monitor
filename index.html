@@ -563,6 +563,14 @@ align-items: center;
       }
     }
 
+<section class="panel">
+  <div class="panel-label">AGENDA</div>
+
+  <div id="nextEvent" style="font-size:22px; margin-top:10px;">
+    SIN EVENTOS
+  </div>
+</section>
+    
     async function loadNews() {
       try {
         const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
