@@ -136,24 +136,30 @@ function updateNextEvent(){
 const now = new Date();
 const current = now.getHours() * 60 + now.getMinutes();
 
-const sorted = events
-.map(function(e){
-const parts = e.time.split(":");
-const minutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
-return { ...e, minutes };
-})
-.sort(function(a,b){ return a.minutes - b.minutes; });
+let next = null;
 
-let next = sorted.find(function(e){
-return e.minutes >= current;
-});
+for (let i = 0; i < events.length; i++) {
+const e = events[i];
+const parts = e.time.trim().split(":");
 
-if (next){
+```
+const hour = Number(parts[0]);
+const minute = Number(parts[1]);
+const total = hour * 60 + minute;
+
+if (total >= current) {
+  next = e;
+  break;
+}
+```
+
+}
+
+if (next) {
 document.getElementById("nextEvent").innerText =
 next.time + " — " + next.text;
 } else {
 document.getElementById("nextEvent").innerText =
-"MAÑANA " + sorted[0].time + " — " + sorted[0].text;
+"MAÑANA " + events[0].time + " — " + events[0].text;
 }
 }
-
