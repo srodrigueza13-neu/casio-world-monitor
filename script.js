@@ -137,7 +137,6 @@ for (let i = 0; i < events.length; i++) {
 const e = events[i];
 const parts = e.time.trim().split(":");
 
-```
 const hour = Number(parts[0]);
 const minute = Number(parts[1]);
 const total = hour * 60 + minute;
@@ -146,7 +145,6 @@ if (total >= current) {
   next = e;
   break;
 }
-```
 
 }
 
@@ -156,7 +154,5 @@ next.time + " — " + next.text;
 } else {
 document.getElementById("nextEvent").innerText =
 "MAÑANA " + events[0].time + " — " + events[0].text;
-document.getElementById("nextEvent").innerText = "PRUEBA AGENDA";
-
 }
 }
