@@ -1,364 +1,387 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>World Monitor</title>
+
   <style>
     * {
       box-sizing: border-box;
     }
 
-```
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #1e232c 0%, #101319 45%, #0a0c10 100%);
-  color: #e8edf3;
-  font-family: "Courier New", monospace;
-  min-height: 100vh;
-}
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #1e232c 0%, #101319 45%, #0a0c10 100%);
+      color: #e8edf3;
+      font-family: "Courier New", monospace;
+      min-height: 100vh;
+    }
 
-.shell {
-  min-height: 100vh;
-  padding: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .shell {
+      min-height: 100vh;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.frame {
-  width: 100%;
-  max-width: 1180px;
-  background: linear-gradient(180deg, #11151b, #0b0e13);
-  border: 2px solid #3e4550;
-  box-shadow:
-    0 0 0 2px #0a0d12 inset,
-    0 0 0 3px #596170 inset,
-    0 22px 50px rgba(0,0,0,0.55);
-  padding: 18px;
-}
+    .frame {
+      width: 100%;
+      max-width: 1180px;
+      background: linear-gradient(180deg, #11151b, #0b0e13);
+      border: 2px solid #3e4550;
+      box-shadow:
+        0 0 0 2px #0a0d12 inset,
+        0 0 0 3px #596170 inset,
+        0 22px 50px rgba(0, 0, 0, 0.55);
+      padding: 18px;
+    }
 
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #2e3440;
-}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2e3440;
+    }
 
-.brand-main {
-  font-size: 26px;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
+    .brand-main {
+      font-size: 26px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
 
-.brand-sub {
-  font-size: 12px;
-  color: #9ca6b4;
-  letter-spacing: 2px;
-  margin-top: 3px;
-}
+    .brand-sub {
+      font-size: 12px;
+      color: #9ca6b4;
+      letter-spacing: 2px;
+      margin-top: 3px;
+    }
 
-.status {
-  font-size: 13px;
-  color: #aeb8c5;
-  letter-spacing: 1px;
-  border: 1px solid #39414d;
-  padding: 8px 12px;
-  background: #161b22;
-}
+    .status {
+      font-size: 13px;
+      color: #aeb8c5;
+      letter-spacing: 1px;
+      border: 1px solid #39414d;
+      padding: 8px 12px;
+      background: #161b22;
+    }
 
-.main-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 16px;
-}
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+    }
 
-.info-column {
-  display: grid;
-  gap: 16px;
-}
+    .info-column {
+      display: grid;
+      gap: 16px;
+    }
 
-.panel {
-  background: linear-gradient(180deg, #151920, #0f1319);
-  border: 1px solid #39414d;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.04) inset,
-    0 -1px 0 rgba(0,0,0,0.35) inset;
-  padding: 16px;
-}
+    .panel {
+      background: linear-gradient(180deg, #151920, #0f1319);
+      border: 1px solid #39414d;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 -1px 0 rgba(0,0,0,0.35) inset;
+      padding: 16px;
+    }
 
-.panel-label {
-  display: inline-block;
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: #a7b0bc;
-  border: 1px solid #39414d;
-  background: #1b2129;
-  padding: 6px 10px;
-  margin-bottom: 14px;
-}
+    .panel-label {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #a7b0bc;
+      border: 1px solid #39414d;
+      background: #1b2129;
+      padding: 6px 10px;
+      margin-bottom: 14px;
+    }
 
-.clock-panel {
-  min-height: 420px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+    .clock-panel {
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-.clock {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0 18px;
-}
+    .clock {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 8px 0 18px;
+    }
 
-.flip-group {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+    .flip-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-.flip-card {
-  width: 180px;
-  height: 190px;
-  border: 1px solid #49505c;
-  background: linear-gradient(180deg, #232933 0%, #171b22 48%, #10141a 49%, #1b2129 100%);
-  box-shadow:
-    0 10px 18px rgba(0,0,0,0.34),
-    0 1px 0 rgba(255,255,255,0.04) inset;
-  position: relative;
-  overflow: hidden;
-}
+    .flip-card {
+      width: 180px;
+      height: 190px;
+      border: 1px solid #49505c;
+      background: linear-gradient(180deg, #232933 0%, #171b22 48%, #10141a 49%, #1b2129 100%);
+      box-shadow:
+        0 10px 18px rgba(0,0,0,0.34),
+        0 1px 0 rgba(255,255,255,0.04) inset;
+      position: relative;
+      overflow: hidden;
+    }
 
-.flip-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 2px;
-  background: rgba(255,255,255,0.05);
-  z-index: 2;
-}
+    .flip-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 2px;
+      background: rgba(255,255,255,0.05);
+      z-index: 2;
+    }
 
-.flip-top {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 112px;
-  font-weight: bold;
-  letter-spacing: -6px;
-  color: #f2f5f8;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.45);
-}
+    .flip-top {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 112px;
+      font-weight: bold;
+      letter-spacing: -6px;
+      color: #f2f5f8;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    }
 
-.separator {
-  font-size: 82px;
-  color: #d7dde5;
-  transform: translateY(-8px);
-}
+    .separator {
+      font-size: 82px;
+      color: #d7dde5;
+      transform: translateY(-8px);
+    }
 
-.date-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
+    .date-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-.date-chip {
-  font-size: 20px;
-  letter-spacing: 2px;
-  border: 1px solid #414855;
-  background: #171c24;
-  padding: 12px 16px;
-  color: #d4dbe4;
-}
+    .date-chip {
+      font-size: 20px;
+      letter-spacing: 2px;
+      border: 1px solid #414855;
+      background: #171c24;
+      padding: 12px 16px;
+      color: #d4dbe4;
+    }
 
-.climate-panel,
-.daylight-panel {
-  min-height: 200px;
-}
+    .world-clock {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
 
-.temp-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 18px;
-}
+    .world-clock div {
+      border: 1px solid #414855;
+      background: #171c24;
+      padding: 12px 14px;
+      color: #d4dbe4;
+      font-size: 18px;
+      letter-spacing: 1px;
+      text-align: center;
+    }
 
-.temp {
-  font-size: 76px;
-  font-weight: bold;
-  line-height: 1;
-  color: #f0f4f8;
-}
+    .climate-panel,
+    .daylight-panel {
+      min-height: 200px;
+    }
 
-.condition-wrap {
-  text-align: right;
-}
+    .temp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
 
-.condition {
-  font-size: 28px;
-  letter-spacing: 1px;
-  color: #dce2ea;
-}
+    .temp {
+      font-size: 76px;
+      font-weight: bold;
+      line-height: 1;
+      color: #f0f4f8;
+    }
 
-.range {
-  font-size: 16px;
-  color: #9ca6b4;
-  margin-top: 8px;
-}
+    .condition-wrap {
+      text-align: right;
+    }
 
-.micro-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
+    .condition {
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: #dce2ea;
+    }
 
-.micro-box,
-.day-box {
-  border: 1px solid #39414d;
-  background: #171c24;
-  padding: 14px;
-}
+    .range {
+      font-size: 16px;
+      color: #9ca6b4;
+      margin-top: 8px;
+    }
 
-.micro-title {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: #98a2af;
-  margin-bottom: 8px;
-}
+    .micro-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
 
-.micro-value {
-  font-size: 24px;
-  color: #e5ebf3;
-}
+    .micro-box,
+    .day-box {
+      border: 1px solid #39414d;
+      background: #171c24;
+      padding: 14px;
+    }
 
-.daylight-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 14px;
-}
+    .micro-title {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #98a2af;
+      margin-bottom: 8px;
+    }
 
-.sun-value {
-  font-size: 34px;
-  color: #f0f4f8;
-}
+    .micro-value {
+      font-size: 24px;
+      color: #e5ebf3;
+    }
 
-.day-status {
-  font-size: 15px;
-  color: #a7b0bc;
-  border-top: 1px solid #2b313c;
-  padding-top: 12px;
-  letter-spacing: 1px;
-}
+    .daylight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
 
-.ticker-panel {
-  margin-top: 16px;
-}
+    .sun-value {
+      font-size: 34px;
+      color: #f0f4f8;
+    }
 
-.ticker-wrap {
-  overflow: hidden;
-  border: 1px solid #39414d;
-  background: #171c24;
-  padding: 14px 0;
-}
+    .day-status {
+      font-size: 15px;
+      color: #a7b0bc;
+      border-top: 1px solid #2b313c;
+      padding-top: 12px;
+      letter-spacing: 1px;
+    }
 
-.ticker {
-  display: inline-flex;
-  gap: 42px;
-  white-space: nowrap;
-  padding-left: 100%;
-  animation: scrollTicker 30s linear infinite;
-  font-size: 19px;
-  color: #dce2ea;
-}
+    .ticker-panel {
+      margin-top: 16px;
+    }
 
-@keyframes scrollTicker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
+    .ticker-wrap {
+      overflow: hidden;
+      border: 1px solid #39414d;
+      background: #171c24;
+      padding: 14px 0;
+    }
 
-@media (max-width: 900px) {
-  .main-grid {
-    grid-template-columns: 1fr;
-  }
+    .ticker {
+      display: inline-flex;
+      gap: 42px;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: scrollTicker 30s linear infinite;
+      font-size: 19px;
+      color: #dce2ea;
+    }
 
-  .flip-card {
-    width: 145px;
-    height: 155px;
-  }
+    @keyframes scrollTicker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
 
-  .flip-top {
-    font-size: 88px;
-  }
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
 
-  .temp {
-    font-size: 58px;
-  }
+      .flip-card {
+        width: 145px;
+        height: 155px;
+      }
 
-  .condition {
-    font-size: 22px;
-  }
-}
+      .flip-top {
+        font-size: 88px;
+      }
 
-@media (max-width: 640px) {
-  .shell {
-    padding: 8px;
-  }
+      .temp {
+        font-size: 58px;
+      }
 
-  .frame {
-    padding: 12px;
-  }
+      .condition {
+        font-size: 22px;
+      }
+    }
 
-  .topbar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
+    @media (max-width: 640px) {
+      .shell {
+        padding: 8px;
+      }
 
-  .flip-card {
-    width: 110px;
-    height: 118px;
-  }
+      .frame {
+        padding: 12px;
+      }
 
-  .flip-top {
-    font-size: 66px;
-    letter-spacing: -4px;
-  }
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
 
-  .separator {
-    font-size: 52px;
-  }
+      .flip-card {
+        width: 110px;
+        height: 118px;
+      }
 
-  .temp-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+      .flip-top {
+        font-size: 66px;
+        letter-spacing: -4px;
+      }
 
-  .condition-wrap {
-    text-align: left;
-  }
+      .separator {
+        font-size: 52px;
+      }
 
-  .temp {
-    font-size: 48px;
-  }
+      .temp-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-  .date-chip {
-    font-size: 16px;
-  }
+      .condition-wrap {
+        text-align: left;
+      }
 
-  .ticker {
-    font-size: 15px;
-  }
-}
-```
+      .temp {
+        font-size: 48px;
+      }
 
+      .date-chip,
+      .world-clock div {
+        font-size: 16px;
+      }
+
+      .ticker {
+        font-size: 15px;
+      }
+
+      .world-clock {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -372,117 +395,134 @@ body {
         <div class="status">SYSTEM ONLINE</div>
       </div>
 
-```
-  <div class="main-grid">
-    <section class="clock-panel panel">
-      <div class="panel-label">LOCAL TIME</div>
+      <div class="main-grid">
+        <section class="clock-panel panel">
+          <div class="panel-label">LOCAL TIME</div>
 
-      <div class="clock">
-        <div class="flip-group">
-          <div class="flip-card">
-            <div class="flip-top" id="h">00</div>
+          <div class="clock">
+            <div class="flip-group">
+              <div class="flip-card">
+                <div class="flip-top" id="h">00</div>
+              </div>
+
+              <div class="separator">:</div>
+
+              <div class="flip-card">
+                <div class="flip-top" id="m">00</div>
+              </div>
+            </div>
+
+            <div class="date-row">
+              <div class="date-chip" id="weekday">SUN</div>
+              <div class="date-chip" id="date">12 APR 2026</div>
+            </div>
+
+            <div class="world-clock">
+              <div id="tokyo">TOKYO --:--</div>
+              <div id="madrid">MADRID --:--</div>
+            </div>
           </div>
+        </section>
 
-          <div class="separator">:</div>
+        <section class="info-column">
+          <section class="panel climate-panel">
+            <div class="panel-label">CLIMATE</div>
 
-          <div class="flip-card">
-            <div class="flip-top" id="m">00</div>
-          </div>
-        </div>
+            <div class="temp-row">
+              <div class="temp" id="temp">--°C</div>
+              <div class="condition-wrap">
+                <div class="condition" id="cond">LOADING</div>
+                <div class="range" id="range">WAITING FOR DATA</div>
+              </div>
+            </div>
 
-<div class="date-row">
-  <div class="date-chip" id="weekday">SUN</div>
-  <div class="date-chip" id="date">12 APR 2026</div>
-</div>
+            <div class="micro-grid">
+              <div class="micro-box">
+                <div class="micro-title">SOURCE</div>
+                <div class="micro-value" id="weatherStatus">LIVE</div>
+              </div>
+              <div class="micro-box">
+                <div class="micro-title">NEWS</div>
+                <div class="micro-value">BBC</div>
+              </div>
+            </div>
+          </section>
 
-<div class="world-clock">
-  <div id="tokyo">TOKYO --:--</div>
-  <div id="madrid">MADRID --:--</div>
-</div>
-
-        
-        <div class="date-chip" id="weekday">SUN</div>
-        <div class="date-chip" id="date">12 APR 2026</div>
-        
+          <section class="panel daylight-panel">
+            <div class="panel-label">DAY STATUS</div>
+            <div class="day-status" id="dayStatus">WORLD MONITOR ACTIVE</div>
+          </section>
+        </section>
       </div>
-    </section>
 
-    <section class="info-column">
-      <section class="panel climate-panel">
-        <div class="panel-label">CLIMATE</div>
-
-        <div class="temp-row">
-          <div class="temp" id="temp">--°C</div>
-          <div class="condition-wrap">
-            <div class="condition" id="cond">LOADING</div>
-            <div class="range" id="range">WAITING FOR DATA</div>
-          </div>
-        </div>
-
-        <div class="micro-grid">
-          <div class="micro-box">
-            <div class="micro-title">SOURCE</div>
-            <div class="micro-value" id="weatherStatus">LIVE</div>
-          </div>
-          <div class="micro-box">
-            <div class="micro-title">NEWS</div>
-            <div class="micro-value">BBC</div>
+      <section class="ticker-panel panel">
+        <div class="panel-label">NEWS FEED</div>
+        <div class="ticker-wrap">
+          <div class="ticker" id="ticker">
+            <span>LOADING BBC WORLD NEWS...</span>
           </div>
         </div>
       </section>
-
-      <section class="panel daylight-panel">
-        <div class="panel-label">DAY STATUS</div>
-        <div class="day-status" id="dayStatus">WORLD MONITOR ACTIVE</div>
-      </section>
-    </section>
-  </div>
-
-  <section class="ticker-panel panel">
-    <div class="panel-label">NEWS FEED</div>
-    <div class="ticker-wrap">
-      <div class="ticker" id="ticker">
-        <span>LOADING BBC WORLD NEWS...</span>
-      </div>
     </div>
-  </section>
-</div>
-```
-
   </div>
 
   <script>
-    function pad(n){
-      return String(n).padStart(2,"0");
+    function pad(n) {
+      return String(n).padStart(2, "0");
     }
 
-    function updateClock(){
+    function formatDate(d) {
+      const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      return `${pad(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    function formatWorldTime(timeZone, label) {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).formatToParts(now);
+
+      const hour = parts.find(p => p.type === "hour")?.value ?? "--";
+      const minute = parts.find(p => p.type === "minute")?.value ?? "--";
+
+      return `${label} ${hour}:${minute}`;
+    }
+
+    function updateClock() {
       const d = new Date();
-      const weekdays = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+      const weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
       document.getElementById("h").innerText = pad(d.getHours());
       document.getElementById("m").innerText = pad(d.getMinutes());
       document.getElementById("weekday").innerText = weekdays[d.getDay()];
-      document.getElementById("date").innerText = d.toDateString();
+      document.getElementById("date").innerText = formatDate(d);
+
+      document.getElementById("tokyo").innerText = formatWorldTime("Asia/Tokyo", "TOKYO");
+      document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid", "MADRID");
     }
 
-    async function loadWeather(){
-      try{
+    async function loadWeather() {
+      try {
         const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current=temperature_2m");
         const data = await res.json();
 
         document.getElementById("temp").innerText = Math.round(data.current.temperature_2m) + "°C";
         document.getElementById("cond").innerText = "LIVE WEATHER";
         document.getElementById("range").innerText = "SAN FERNANDO, CL";
-      }catch(e){
+        document.getElementById("weatherStatus").innerText = "LIVE";
+      } catch (e) {
         document.getElementById("temp").innerText = "--°C";
         document.getElementById("cond").innerText = "ERROR WEATHER";
         document.getElementById("range").innerText = "NO WEATHER DATA";
+        document.getElementById("weatherStatus").innerText = "ERROR";
       }
     }
 
-    async function loadNews(){
-      try{
+    async function loadNews() {
+      try {
         const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
         const res = await fetch(url);
         const data = await res.json();
@@ -492,12 +532,14 @@ body {
         }
 
         const text = data.items
-          .slice(0,8)
-          .map(function(x){ return "▸ " + x.title; })
+          .slice(0, 8)
+          .map(function (x) {
+            return "▸ " + x.title;
+          })
           .join("   ");
 
         document.getElementById("ticker").innerText = text;
-      }catch(e){
+      } catch (e) {
         document.getElementById("ticker").innerText = "ERROR NEWS";
       }
     }
@@ -508,6 +550,5 @@ body {
     loadWeather();
     loadNews();
   </script>
-
 </body>
 </html>
