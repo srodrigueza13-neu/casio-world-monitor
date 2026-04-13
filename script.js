@@ -28,16 +28,14 @@ document.getElementById("cond").innerText="ERROR WEATHER";
 async function loadNews(){
 try{
 
-let url="https://api.allorigins.win/get?url="+encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
+let url="https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
 
 let res=await fetch(url);
 let data=await res.json();
 
-let xml=data.contents;
-
-let matches=[...xml.matchAll(/<title>(.*?)</title>/g)]
-.slice(2,12)
-.map(x=>"▸ "+x[1]);
+let matches=data.items
+.slice(0,8)
+.map(x=>"▸ "+x.title);
 
 document.getElementById("ticker").innerText=matches.join("   ");
 
