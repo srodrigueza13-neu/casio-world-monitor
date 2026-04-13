@@ -484,144 +484,200 @@ align-items: center;
     </div>
   </div>
 
-  <script>
-    function pad(n) {
-      return String(n).padStart(2, "0");
-    }
+<script>
+  const CONTRACTS_URL = "https://script.google.com/macros/s/AKfycbx28ipebSpJ_ecrv7JpP60i9wzKj8FFJAPsDcUdgIUY3LoGttQl_93w-_EJzMlavlUy/exec";
 
-    function formatDate(d) {
-      const months = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
-      return `${pad(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
-    }
+  function pad(n) {
+    return String(n).padStart(2, "0");
+  }
 
-    function formatWorldTime(timeZone, label) {
-      const now = new Date();
-      const parts = new Intl.DateTimeFormat("en-GB", {
-        timeZone,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      }).formatToParts(now);
+  function formatDate(d) {
+    const months = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+    return `${pad(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  }
 
-      const hour = parts.find(p => p.type === "hour")?.value ?? "--";
-      const minute = parts.find(p => p.type === "minute")?.value ?? "--";
+  function formatWorldTime(timeZone, label) {
+    const now = new Date();
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).formatToParts(now);
 
-      return `${label} ${hour}:${minute}`;
-    }
+    const hour = parts.find(p => p.type === "hour")?.value ?? "--";
+    const minute = parts.find(p => p.type === "minute")?.value ?? "--";
 
-    function updateClock() {
-      const d = new Date();
-      const weekdays = ["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁB"];
+    return `${label} ${hour}:${minute}`;
+  }
 
-      document.getElementById("h").innerText = pad(d.getHours());
-      document.getElementById("m").innerText = pad(d.getMinutes());
-      document.getElementById("weekday").innerText = weekdays[d.getDay()];
-      document.getElementById("date").innerText = formatDate(d);
+  function updateClock() {
+    const d = new Date();
+    const weekdays = ["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁB"];
 
-      document.getElementById("tokyo").innerText = formatWorldTime("Asia/Tokyo","TOKYO");
-      document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid","MADRID");
-    }
+    document.getElementById("h").innerText = pad(d.getHours());
+    document.getElementById("m").innerText = pad(d.getMinutes());
+    document.getElementById("weekday").innerText = weekdays[d.getDay()];
+    document.getElementById("date").innerText = formatDate(d);
 
-    async function loadWeather() {
-      try {
-        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto");
-        const data = await res.json();
+    document.getElementById("tokyo").innerText = formatWorldTime("Asia/Tokyo","TOKYO");
+    document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid","MADRID");
+  }
 
-        const currentTemp = Math.round(data.current_weather.temperature);
-        const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
-        const minTemp = Math.round(data.daily.temperature_2m_min[0]);
-        const code = data.current_weather.weathercode;
+  async function loadWeather() {
+    try {
+      const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto");
+      const data = await res.json();
 
-        let label = "CLIMA EN VIVO";
-        let icon = "☁️";
+      const currentTemp = Math.round(data.current_weather.temperature);
+      const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
+      const minTemp = Math.round(data.daily.temperature_2m_min[0]);
+      const code = data.current_weather.weathercode;
 
-        if (code === 0) {
-          label = "DESPEJADO";
-          icon = "☀️";
-        } else if (code === 1 || code === 2) {
-          label = "PARCIALMENTE NUBLADO";
-          icon = "⛅";
-        } else if (code === 3) {
-          label = "NUBLADO";
-          icon = "☁️";
-        } else if ([45, 48].includes(code)) {
-          label = "NIEBLA";
-          icon = "🌫️";
-        } else if ([51,53,55,61,63,65,80,81,82].includes(code)) {
-          label = "LLUVIA";
-          icon = "🌧️";
-        } else if ([71,73,75,77,85,86].includes(code)) {
-          label = "NIEVE";
-          icon = "❄️";
-        } else if ([95,96,99].includes(code)) {
-          label = "TORMENTA";
-          icon = "⛈️";
-        }
+      let label = "CLIMA EN VIVO";
+      let icon = "☁️";
 
-        document.getElementById("temp").innerText = currentTemp + "°C";
-        document.getElementById("cond").innerText = icon + " " + label;
-        document.getElementById("range").innerText = "SAN FERNANDO, CL";
-        document.getElementById("weatherExtra").innerText = "H " + maxTemp + "° / L " + minTemp + "°";
-
-      } catch (e) {
-        document.getElementById("temp").innerText = "--°C";
-        document.getElementById("cond").innerText = "ERROR WEATHER";
-        document.getElementById("range").innerText = "NO WEATHER DATA";
-        document.getElementById("weatherExtra").innerText = "H --° / L --°";
+      if (code === 0) {
+        label = "DESPEJADO";
+        icon = "☀️";
+      } else if (code === 1 || code === 2) {
+        label = "PARCIALMENTE NUBLADO";
+        icon = "⛅";
+      } else if (code === 3) {
+        label = "NUBLADO";
+        icon = "☁️";
+      } else if ([45, 48].includes(code)) {
+        label = "NIEBLA";
+        icon = "🌫️";
+      } else if ([51,53,55,61,63,65,80,81,82].includes(code)) {
+        label = "LLUVIA";
+        icon = "🌧️";
+      } else if ([71,73,75,77,85,86].includes(code)) {
+        label = "NIEVE";
+        icon = "❄️";
+      } else if ([95,96,99].includes(code)) {
+        label = "TORMENTA";
+        icon = "⛈️";
       }
+
+      document.getElementById("temp").innerText = currentTemp + "°C";
+      document.getElementById("cond").innerText = icon + " " + label;
+      document.getElementById("range").innerText = "SAN FERNANDO, CL";
+      document.getElementById("weatherExtra").innerText = "H " + maxTemp + "° / L " + minTemp + "°";
+
+    } catch (e) {
+      document.getElementById("temp").innerText = "--°C";
+      document.getElementById("cond").innerText = "ERROR WEATHER";
+      document.getElementById("range").innerText = "NO WEATHER DATA";
+      document.getElementById("weatherExtra").innerText = "H --° / L --°";
     }
+  }
 
-    async function loadNews() {
-      try {
-        const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
-        const res = await fetch(url);
-        const data = await res.json();
+  async function loadNews() {
+    try {
+      const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
+      const res = await fetch(url);
+      const data = await res.json();
 
-        if (!data.items || !data.items.length) {
-          throw new Error("No news items");
-        }
+      if (!data.items || !data.items.length) {
+        throw new Error("No news items");
+      }
 
-        const keywords = ["war", "attack", "explosion", "crash", "earthquake"];
-        let breaking = null;
+      const keywords = ["war", "attack", "explosion", "crash", "earthquake"];
+      let breaking = null;
 
-        data.items.forEach(function(item) {
-          const title = item.title.toLowerCase();
-          if (keywords.some(function(k) { return title.includes(k); })) {
-            if (!breaking) {
-              breaking = item.title;
-            }
+      data.items.forEach(function(item) {
+        const title = item.title.toLowerCase();
+        if (keywords.some(function(k) { return title.includes(k); })) {
+          if (!breaking) {
+            breaking = item.title;
           }
-        });
-
-        const b = document.getElementById("breaking");
-
-        if (breaking) {
-          b.style.display = "block";
-          b.innerText = "🚨 NOTICIA URGENTE: " + breaking;
-
-          setTimeout(function() {
-            b.style.display = "none";
-          }, 15000);
-        } else {
-          b.style.display = "none";
         }
+      });
 
-        const text = data.items
-          .map(function(x) { return "▸ " + x.title; })
-          .join("        ");
+      const b = document.getElementById("breaking");
 
-        document.getElementById("ticker").innerText = text;
+      if (breaking) {
+        b.style.display = "block";
+        b.innerText = "🚨 NOTICIA URGENTE: " + breaking;
 
-      } catch (e) {
-        document.getElementById("ticker").innerText = "ERROR NEWS";
+        setTimeout(function() {
+          b.style.display = "none";
+        }, 15000);
+      } else {
+        b.style.display = "none";
       }
+
+      const text = data.items
+        .map(function(x) { return "▸ " + x.title; })
+        .join("        ");
+
+      document.getElementById("ticker").innerText = text;
+
+    } catch (e) {
+      document.getElementById("ticker").innerText = "ERROR NEWS";
     }
+  }
 
-    updateClock();
-    setInterval(updateClock, 1000);
+  function formatContractDatePretty(dateStr) {
+    const months = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+    const [day, month, year] = dateStr.split("-").map(Number);
+    return `${pad(day)} ${months[month - 1]} ${year}`;
+  }
 
-    loadWeather();
-    loadNews();
-  </script>
+  function getDaysUntil(dateStr) {
+    const [day, month, year] = dateStr.split("-").map(Number);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const target = new Date(year, month - 1, day);
+    const diffMs = target - today;
+    return Math.floor(diffMs / 86400000);
+  }
+
+  async function loadContractsReminder() {
+    try {
+      const res = await fetch(CONTRACTS_URL, { cache: "no-store" });
+      const data = await res.json();
+
+      if (!data.ok || !data.next) {
+        document.getElementById("contractDate").innerText = "-- --- ----";
+        document.getElementById("contractName").innerText = "SIN VENCIMIENTOS";
+        document.getElementById("contractType").innerText = "--";
+        return;
+      }
+
+      const item = data.next;
+      const days = getDaysUntil(item.fecha);
+
+      document.getElementById("contractDate").innerText = formatContractDatePretty(item.fecha);
+      document.getElementById("contractName").innerText = item.trabajador.toUpperCase();
+
+      let meta = item.tipo.toUpperCase();
+      if (days === 0) {
+        meta += " · HOY";
+      } else if (days === 1) {
+        meta += " · EN 1 DÍA";
+      } else if (days > 1) {
+        meta += ` · EN ${days} DÍAS`;
+      }
+
+      document.getElementById("contractType").innerText = meta;
+
+    } catch (e) {
+      document.getElementById("contractDate").innerText = "-- --- ----";
+      document.getElementById("contractName").innerText = "ERROR";
+      document.getElementById("contractType").innerText = "--";
+    }
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  loadWeather();
+  loadNews();
+  loadContractsReminder();
+
+  setInterval(loadContractsReminder, 60000);
+</script>
 </body>
 </html>
