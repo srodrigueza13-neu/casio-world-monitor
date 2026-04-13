@@ -6,7 +6,9 @@ const xml = await r.text();
 ```
 const items = [...xml.matchAll(/<title>(.*?)<\/title>/g)]
   .slice(2, 12)
-  .map(x => ({ title: x[1] }));
+  .map(function(x){
+    return { title: x[1] };
+  });
 
 res.status(200).json({ items });
 ```
