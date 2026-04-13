@@ -132,5 +132,28 @@ loadNews();
 setInterval(updateClock, 1000);
 setInterval(updateWorldClocks, 1000);
 
-updateNextEvent();
-setInterval(updateNextEvent, 60000);
+function updateNextEvent(){
+const now = new Date();
+const current = now.getHours() * 60 + now.getMinutes();
+
+const sorted = events
+.map(function(e){
+const parts = e.time.split(":");
+const minutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+return { ...e, minutes };
+})
+.sort(function(a,b){ return a.minutes - b.minutes; });
+
+let next = sorted.find(function(e){
+return e.minutes >= current;
+});
+
+if (next){
+document.getElementById("nextEvent").innerText =
+next.time + " — " + next.text;
+} else {
+document.getElementById("nextEvent").innerText =
+"MAÑANA " + sorted[0].time + " — " + sorted[0].text;
+}
+}
+
