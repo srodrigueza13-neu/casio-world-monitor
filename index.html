@@ -394,15 +394,15 @@ align-items: center;
     <div class="frame">
       <div class="topbar">
         <div class="brand">
-          <div class="brand-main">WORLD MONITOR</div>
-          <div class="brand-sub">RETRO DESK UNIT / LIVE</div>
-        </div>
-        <div class="status">SYSTEM ONLINE</div>
-      </div>
+        <div class="brand-main">WORLD MONITOR</div>
+<div class="brand-sub">ESTACIÓN DE MONITOREO / EN VIVO</div>
+...
+<div class="status">SISTEMA ACTIVO</div>
+
 
       <div class="main-grid">
         <section class="clock-panel panel">
-          <div class="panel-label">LOCAL TIME</div>
+          <div class="panel-label">HORA LOCAL</div>
 
           <div class="clock">
             <div class="flip-group">
@@ -436,16 +436,16 @@ align-items: center;
             <div class="temp-row">
   <div class="temp" id="temp">--°C</div>
   <div class="condition-wrap">
-    <div class="condition" id="cond">LOADING</div>
-    <div class="range" id="range">WAITING FOR DATA</div>
-    <div class="range" id="weatherExtra">H --° / L --°</div>
+    <div class="condition" id="cond">CARGANDO</div>
+    <div class="range" id="range">ESPERANDO DATOS</div>
+    <div class="range" id="weatherExtra">Máx --° / Mín --°</div>
   </div>
 </div>
             
             <div class="micro-grid">
               <div class="micro-box">
-                <div class="micro-title">SOURCE</div>
-                <div class="micro-value" id="weatherStatus">LIVE</div>
+                <div class="micro-title">FUENTE</div>
+                <div class="micro-value" id="weatherStatus">EN VIVO</div>
               </div>
               <div class="micro-box">
                 <div class="micro-title">NEWS</div>
@@ -456,7 +456,7 @@ align-items: center;
 
           <section class="panel daylight-panel">
             <div class="panel-label">DAY STATUS</div>
-            <div class="day-status" id="dayStatus">WORLD MONITOR ACTIVE</div>
+            <div class="day-status" id="dayStatus">WORLD MONITOR ACTIVO</div>
           </section>
         </section>
       </div>
@@ -482,7 +482,7 @@ align-items: center;
     }
 
     function formatDate(d) {
-      const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+     const months = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
       return `${pad(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
     }
 
@@ -503,7 +503,7 @@ align-items: center;
 
     function updateClock() {
       const d = new Date();
-      const weekdays = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+      const weekdays = ["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁB"];
 
       document.getElementById("h").innerText = pad(d.getHours());
       document.getElementById("m").innerText = pad(d.getMinutes());
@@ -524,29 +524,29 @@ const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
 const minTemp = Math.round(data.daily.temperature_2m_min[0]);
 const code = data.current_weather.weathercode;
 
-let label = "LIVE WEATHER";
+let label = "CLIMA EN VIVO";
 let icon = "☁️";
 
 if (code === 0) {
-  label = "CLEAR";
+  label = "DESPEJADO";
   icon = "☀️";
 } else if (code === 1 || code === 2) {
-  label = "PARTLY CLOUDY";
+  label = "PARCIALMENTE NUBLADO";
   icon = "⛅";
 } else if (code === 3) {
-  label = "CLOUDY";
+  label = "NUBLADO";
   icon = "☁️";
 } else if ([45, 48].includes(code)) {
-  label = "FOG";
+  label = "NIEBLA";
   icon = "🌫️";
 } else if ([51,53,55,61,63,65,80,81,82].includes(code)) {
-  label = "RAIN";
+  label = "LLUVIA";
   icon = "🌧️";
 } else if ([71,73,75,77,85,86].includes(code)) {
-  label = "SNOW";
+  label = "NIEVE";
   icon = "❄️";
 } else if ([95,96,99].includes(code)) {
-  label = "STORM";
+  label = "TORMENTA";
   icon = "⛈️";
 }
 
@@ -590,7 +590,7 @@ const b = document.getElementById("breaking");
 
 if (breaking) {
 b.style.display = "block";
-b.innerText = "🚨 BREAKING: " + breaking;
+b.innerText = "🚨 NOTICIA URGENTE: " + breaking;
 
 setTimeout(function(){
 b.style.display = "none";
