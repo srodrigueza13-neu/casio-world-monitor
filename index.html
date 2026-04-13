@@ -434,13 +434,14 @@ align-items: center;
             <div class="panel-label">CLIMATE</div>
 
             <div class="temp-row">
-              <div class="temp" id="temp">--°C</div>
-              <div class="condition-wrap">
-                <div class="condition" id="cond">LOADING</div>
-                <div class="range" id="range">WAITING FOR DATA</div>
-              </div>
-            </div>
-
+  <div class="temp" id="temp">--°C</div>
+  <div class="condition-wrap">
+    <div class="condition" id="cond">LOADING</div>
+    <div class="range" id="range">WAITING FOR DATA</div>
+    <div class="range" id="weatherExtra">H --° / L --°</div>
+  </div>
+</div>
+            
             <div class="micro-grid">
               <div class="micro-box">
                 <div class="micro-title">SOURCE</div>
@@ -513,22 +514,55 @@ align-items: center;
       document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid","MADRID");
     }
 
-    async function loadWeather() {
-      try {
-        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current=temperature_2m");
-        const data = await res.json();
+async function loadWeather(){
+try{
+const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto");
+const data = await res.json();
 
-        document.getElementById("temp").innerText = Math.round(data.current.temperature_2m) + "°C";
-        document.getElementById("cond").innerText = "LIVE WEATHER";
-        document.getElementById("range").innerText = "SAN FERNANDO, CL";
-        document.getElementById("weatherStatus").innerText = "LIVE";
-      } catch (e) {
-        document.getElementById("temp").innerText = "--°C";
-        document.getElementById("cond").innerText = "ERROR WEATHER";
-        document.getElementById("range").innerText = "NO WEATHER DATA";
-        document.getElementById("weatherStatus").innerText = "ERROR";
-      }
-    }
+const currentTemp = Math.round(data.current_weather.temperature);
+const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
+const minTemp = Math.round(data.daily.temperature_2m_min[0]);
+const code = data.current_weather.weathercode;
+
+let label = "LIVE WEATHER";
+let icon = "☁️";
+
+if (code === 0) {
+  label = "CLEAR";
+  icon = "☀️";
+} else if (code === 1 || code === 2) {
+  label = "PARTLY CLOUDY";
+  icon = "⛅";
+} else if (code === 3) {
+  label = "CLOUDY";
+  icon = "☁️";
+} else if ([45, 48].includes(code)) {
+  label = "FOG";
+  icon = "🌫️";
+} else if ([51,53,55,61,63,65,80,81,82].includes(code)) {
+  label = "RAIN";
+  icon = "🌧️";
+} else if ([71,73,75,77,85,86].includes(code)) {
+  label = "SNOW";
+  icon = "❄️";
+} else if ([95,96,99].includes(code)) {
+  label = "STORM";
+  icon = "⛈️";
+}
+
+document.getElementById("temp").innerText = currentTemp + "°C";
+document.getElementById("cond").innerText = icon + " " + label;
+document.getElementById("range").innerText = "SAN FERNANDO, CL";
+document.getElementById("weatherExtra").innerText = "H " + maxTemp + "° / L " + minTemp + "°";
+
+}catch(e){
+document.getElementById("temp").innerText = "--°C";
+document.getElementById("cond").innerText = "ERROR WEATHER";
+document.getElementById("range").innerText = "NO WEATHER DATA";
+document.getElementById("weatherExtra").innerText = "H --° / L --°";
+}
+}
+
 
 async function loadNews(){
 try{
