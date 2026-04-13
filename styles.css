@@ -28,14 +28,14 @@ padding: 14px 0;
 display: inline-block;
 white-space: nowrap;
 padding-left: 100%;
-animation: scrollTicker 75s linear infinite;
+animation: scrollTicker 90s linear infinite;
 font-size: 19px;
 color: #dce2ea;
 }
 
 @keyframes scrollTicker {
 from { transform: translateX(0); }
-to { transform: translateX(-100%); }
+to { transform: translateX(-50%); }
 }
 
 .world-clock{
