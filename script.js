@@ -52,25 +52,43 @@ if (!data.items || !data.items.length) {
   throw new Error("No news items");
 }
 
+const keywords = ["war", "attack", "explosion", "crash", "earthquake"];
+let breaking = null;
+
+data.items.forEach(function(item){
+  const title = item.title.toLowerCase();
+  if (keywords.some(function(k){ return title.includes(k); })) {
+    if (!breaking) {
+      breaking = item.title;
+    }
+  }
+});
+
+if (breaking) {
+  const b = document.getElementById("breaking");
+  b.style.display = "block";
+  b.innerText = "🚨 BREAKING: " + breaking;
+}
+
 let newsList = data.items.slice(0, 8);
 let index = 0;
 
 function showNextNews() {
-document.getElementById("ticker").innerText =
-"▸ " + newsList[index].title;
+  document.getElementById("ticker").innerText =
+    "▸ " + newsList[index].title;
 
-index++;
-if (index >= newsList.length) index = 0;
+  index++;
+  if (index >= newsList.length) index = 0;
 }
 
 showNextNews();
 setInterval(showNextNews, 5000);
 
-
 }catch(e){
 document.getElementById("ticker").innerText = "ERROR NEWS";
 }
 }
+
 
 updateClock();
 updateWorldClocks();
