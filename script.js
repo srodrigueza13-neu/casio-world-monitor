@@ -27,17 +27,21 @@ document.getElementById("cond").innerText="ERROR WEATHER";
 
 async function loadNews(){
 try{
-let res=await fetch("/api/news");
+
+let url="https://api.allorigins.win/get?url="+encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
+
+let res=await fetch(url);
 let data=await res.json();
 
-let text=data.items.map(x=>"▸ "+x.title).join("   ");
+let xml=data.contents;
 
-document.getElementById("ticker").innerText=text;
+let matches=[...xml.matchAll(/<title>(.*?)</title>/g)]
+.slice(2,12)
+.map(x=>"▸ "+x[1]);
+
+document.getElementById("ticker").innerText=matches.join("   ");
 
 }catch(e){
 document.getElementById("ticker").innerText="ERROR NEWS";
 }
 }
-
-loadWeather();
-loadNews();
