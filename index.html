@@ -536,6 +536,7 @@ const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent
 const res = await fetch(url);
 const data = await res.json();
 
+```
 if (!data.items || !data.items.length) {
   throw new Error("No news items");
 }
@@ -552,10 +553,12 @@ data.items.forEach(function(item){
   }
 });
 
+const b = document.getElementById("breaking");
 if (breaking) {
-  const b = document.getElementById("breaking");
   b.style.display = "block";
   b.innerText = "🚨 BREAKING: " + breaking;
+} else {
+  b.style.display = "none";
 }
 
 const text = data.items
@@ -564,11 +567,11 @@ const text = data.items
 
 document.getElementById("ticker").innerText = text;
 
-
 }catch(e){
 document.getElementById("ticker").innerText = "ERROR NEWS";
 }
 }
+
 
 
     updateClock();
