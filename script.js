@@ -66,7 +66,6 @@ if (index >= newsList.length) index = 0;
 showNextNews();
 setInterval(showNextNews, 5000);
 
-```
 
 }catch(e){
 document.getElementById("ticker").innerText = "ERROR NEWS";
