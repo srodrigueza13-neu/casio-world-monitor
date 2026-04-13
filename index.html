@@ -514,7 +514,7 @@ align-items: center;
       document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid","MADRID");
     }
 
-    async function loadWeather() {
+        async function loadWeather() {
       try {
         const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto");
         const data = await res.json();
@@ -562,14 +562,15 @@ align-items: center;
         document.getElementById("weatherExtra").innerText = "H --° / L --°";
       }
     }
+  </script>
 
-<section class="panel">
-  <div class="panel-label">AGENDA</div>
+  <section class="panel">
+    <div class="panel-label">AGENDA</div>
 
-  <div id="nextEvent" style="font-size:22px; margin-top:10px;">
-    SIN EVENTOS
-  </div>
-</section>
+    <div id="nextEvent" style="font-size:22px; margin-top:10px;">
+      SIN EVENTOS
+    </div>
+  </section>
     
     async function loadNews() {
       try {
