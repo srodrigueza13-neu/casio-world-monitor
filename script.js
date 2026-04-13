@@ -12,11 +12,11 @@ document.getElementById("date").innerText = d.toDateString();
 
 async function loadWeather(){
 try{
-const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current=temperature_2m");
+const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true");
 const data = await res.json();
 
 ```
-document.getElementById("temp").innerText = Math.round(data.current.temperature_2m) + "°C";
+document.getElementById("temp").innerText = Math.round(data.current_weather.temperature) + "°C";
 document.getElementById("cond").innerText = "LIVE";
 ```
 
