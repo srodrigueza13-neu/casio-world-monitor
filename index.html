@@ -2,27 +2,502 @@
 
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Monitor</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Monitor</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+```
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1e232c 0%, #101319 45%, #0a0c10 100%);
+  color: #e8edf3;
+  font-family: "Courier New", monospace;
+  min-height: 100vh;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame {
+  width: 100%;
+  max-width: 1180px;
+  background: linear-gradient(180deg, #11151b, #0b0e13);
+  border: 2px solid #3e4550;
+  box-shadow:
+    0 0 0 2px #0a0d12 inset,
+    0 0 0 3px #596170 inset,
+    0 22px 50px rgba(0,0,0,0.55);
+  padding: 18px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2e3440;
+}
+
+.brand-main {
+  font-size: 26px;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.brand-sub {
+  font-size: 12px;
+  color: #9ca6b4;
+  letter-spacing: 2px;
+  margin-top: 3px;
+}
+
+.status {
+  font-size: 13px;
+  color: #aeb8c5;
+  letter-spacing: 1px;
+  border: 1px solid #39414d;
+  padding: 8px 12px;
+  background: #161b22;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+.info-column {
+  display: grid;
+  gap: 16px;
+}
+
+.panel {
+  background: linear-gradient(180deg, #151920, #0f1319);
+  border: 1px solid #39414d;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 -1px 0 rgba(0,0,0,0.35) inset;
+  padding: 16px;
+}
+
+.panel-label {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #a7b0bc;
+  border: 1px solid #39414d;
+  background: #1b2129;
+  padding: 6px 10px;
+  margin-bottom: 14px;
+}
+
+.clock-panel {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 18px;
+}
+
+.flip-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.flip-card {
+  width: 180px;
+  height: 190px;
+  border: 1px solid #49505c;
+  background: linear-gradient(180deg, #232933 0%, #171b22 48%, #10141a 49%, #1b2129 100%);
+  box-shadow:
+    0 10px 18px rgba(0,0,0,0.34),
+    0 1px 0 rgba(255,255,255,0.04) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+.flip-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: rgba(255,255,255,0.05);
+  z-index: 2;
+}
+
+.flip-top {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 112px;
+  font-weight: bold;
+  letter-spacing: -6px;
+  color: #f2f5f8;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+}
+
+.separator {
+  font-size: 82px;
+  color: #d7dde5;
+  transform: translateY(-8px);
+}
+
+.date-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.date-chip {
+  font-size: 20px;
+  letter-spacing: 2px;
+  border: 1px solid #414855;
+  background: #171c24;
+  padding: 12px 16px;
+  color: #d4dbe4;
+}
+
+.climate-panel,
+.daylight-panel {
+  min-height: 200px;
+}
+
+.temp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.temp {
+  font-size: 76px;
+  font-weight: bold;
+  line-height: 1;
+  color: #f0f4f8;
+}
+
+.condition-wrap {
+  text-align: right;
+}
+
+.condition {
+  font-size: 28px;
+  letter-spacing: 1px;
+  color: #dce2ea;
+}
+
+.range {
+  font-size: 16px;
+  color: #9ca6b4;
+  margin-top: 8px;
+}
+
+.micro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.micro-box,
+.day-box {
+  border: 1px solid #39414d;
+  background: #171c24;
+  padding: 14px;
+}
+
+.micro-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #98a2af;
+  margin-bottom: 8px;
+}
+
+.micro-value {
+  font-size: 24px;
+  color: #e5ebf3;
+}
+
+.daylight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.sun-value {
+  font-size: 34px;
+  color: #f0f4f8;
+}
+
+.day-status {
+  font-size: 15px;
+  color: #a7b0bc;
+  border-top: 1px solid #2b313c;
+  padding-top: 12px;
+  letter-spacing: 1px;
+}
+
+.ticker-panel {
+  margin-top: 16px;
+}
+
+.ticker-wrap {
+  overflow: hidden;
+  border: 1px solid #39414d;
+  background: #171c24;
+  padding: 14px 0;
+}
+
+.ticker {
+  display: inline-flex;
+  gap: 42px;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: scrollTicker 30s linear infinite;
+  font-size: 19px;
+  color: #dce2ea;
+}
+
+@keyframes scrollTicker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@media (max-width: 900px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flip-card {
+    width: 145px;
+    height: 155px;
+  }
+
+  .flip-top {
+    font-size: 88px;
+  }
+
+  .temp {
+    font-size: 58px;
+  }
+
+  .condition {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .shell {
+    padding: 8px;
+  }
+
+  .frame {
+    padding: 12px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .flip-card {
+    width: 110px;
+    height: 118px;
+  }
+
+  .flip-top {
+    font-size: 66px;
+    letter-spacing: -4px;
+  }
+
+  .separator {
+    font-size: 52px;
+  }
+
+  .temp-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .condition-wrap {
+    text-align: left;
+  }
+
+  .temp {
+    font-size: 48px;
+  }
+
+  .date-chip {
+    font-size: 16px;
+  }
+
+  .ticker {
+    font-size: 15px;
+  }
+}
+```
+
+  </style>
 </head>
-
 <body>
+  <div class="shell">
+    <div class="frame">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-main">WORLD MONITOR</div>
+          <div class="brand-sub">RETRO DESK UNIT / LIVE</div>
+        </div>
+        <div class="status">SYSTEM ONLINE</div>
+      </div>
 
-<div class="clock">
-  <div id="h">00</div>:
-  <div id="m">00</div>
+```
+  <div class="main-grid">
+    <section class="clock-panel panel">
+      <div class="panel-label">LOCAL TIME</div>
+
+      <div class="clock">
+        <div class="flip-group">
+          <div class="flip-card">
+            <div class="flip-top" id="h">00</div>
+          </div>
+
+          <div class="separator">:</div>
+
+          <div class="flip-card">
+            <div class="flip-top" id="m">00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="date-row">
+        <div class="date-chip" id="weekday">SUN</div>
+        <div class="date-chip" id="date">12 APR 2026</div>
+      </div>
+    </section>
+
+    <section class="info-column">
+      <section class="panel climate-panel">
+        <div class="panel-label">CLIMATE</div>
+
+        <div class="temp-row">
+          <div class="temp" id="temp">--°C</div>
+          <div class="condition-wrap">
+            <div class="condition" id="cond">LOADING</div>
+            <div class="range" id="range">WAITING FOR DATA</div>
+          </div>
+        </div>
+
+        <div class="micro-grid">
+          <div class="micro-box">
+            <div class="micro-title">SOURCE</div>
+            <div class="micro-value" id="weatherStatus">LIVE</div>
+          </div>
+          <div class="micro-box">
+            <div class="micro-title">NEWS</div>
+            <div class="micro-value">BBC</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel daylight-panel">
+        <div class="panel-label">DAY STATUS</div>
+        <div class="day-status" id="dayStatus">WORLD MONITOR ACTIVE</div>
+      </section>
+    </section>
+  </div>
+
+  <section class="ticker-panel panel">
+    <div class="panel-label">NEWS FEED</div>
+    <div class="ticker-wrap">
+      <div class="ticker" id="ticker">
+        <span>LOADING BBC WORLD NEWS...</span>
+      </div>
+    </div>
+  </section>
 </div>
+```
 
-<div id="date"></div>
+  </div>
 
-<div id="temp">--°C</div>
-<div id="cond">LOADING</div>
+  <script>
+    function pad(n){
+      return String(n).padStart(2,"0");
+    }
 
-<div id="ticker">LOADING NEWS...</div>
+    function updateClock(){
+      const d = new Date();
+      const weekdays = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
 
-<script src="script.js"></script>
+      document.getElementById("h").innerText = pad(d.getHours());
+      document.getElementById("m").innerText = pad(d.getMinutes());
+      document.getElementById("weekday").innerText = weekdays[d.getDay()];
+      document.getElementById("date").innerText = d.toDateString();
+    }
+
+    async function loadWeather(){
+      try{
+        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current=temperature_2m");
+        const data = await res.json();
+
+        document.getElementById("temp").innerText = Math.round(data.current.temperature_2m) + "°C";
+        document.getElementById("cond").innerText = "LIVE WEATHER";
+        document.getElementById("range").innerText = "SAN FERNANDO, CL";
+      }catch(e){
+        document.getElementById("temp").innerText = "--°C";
+        document.getElementById("cond").innerText = "ERROR WEATHER";
+        document.getElementById("range").innerText = "NO WEATHER DATA";
+      }
+    }
+
+    async function loadNews(){
+      try{
+        const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.items || !data.items.length) {
+          throw new Error("No news items");
+        }
+
+        const text = data.items
+          .slice(0,8)
+          .map(function(x){ return "▸ " + x.title; })
+          .join("   ");
+
+        document.getElementById("ticker").innerText = text;
+      }catch(e){
+        document.getElementById("ticker").innerText = "ERROR NEWS";
+      }
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    loadWeather();
+    loadNews();
+  </script>
 
 </body>
 </html>
