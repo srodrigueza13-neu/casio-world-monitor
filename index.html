@@ -454,9 +454,16 @@ align-items: center;
             </div>
           </section>
 
-          <section class="panel daylight-panel">
+            <section class="panel daylight-panel">
             <div class="panel-label">DAY STATUS</div>
             <div class="day-status" id="dayStatus">WORLD MONITOR ACTIVO</div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-label">AGENDA</div>
+            <div id="nextEvent" style="font-size:22px; margin-top:10px;">
+              SIN EVENTOS
+            </div>
           </section>
         </section>
       </div>
@@ -467,11 +474,10 @@ align-items: center;
         </div>
         <div class="panel-label">NEWS FEED</div>
         <div class="ticker-wrap">
-  <marquee id="ticker" scrollamount="4" behavior="scroll" direction="left">
-    LOADING BBC WORLD NEWS...
-  </marquee>
-</div>
-
+          <marquee id="ticker" scrollamount="4" behavior="scroll" direction="left">
+            LOADING BBC WORLD NEWS...
+          </marquee>
+        </div>
       </section>
     </div>
   </div>
@@ -482,7 +488,7 @@ align-items: center;
     }
 
     function formatDate(d) {
-     const months = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+      const months = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
       return `${pad(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
     }
 
@@ -514,109 +520,100 @@ align-items: center;
       document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid","MADRID");
     }
 
-async function loadWeather(){
-try{
-const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto");
-const data = await res.json();
+    async function loadWeather() {
+      try {
+        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto");
+        const data = await res.json();
 
-const currentTemp = Math.round(data.current_weather.temperature);
-const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
-const minTemp = Math.round(data.daily.temperature_2m_min[0]);
-const code = data.current_weather.weathercode;
+        const currentTemp = Math.round(data.current_weather.temperature);
+        const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
+        const minTemp = Math.round(data.daily.temperature_2m_min[0]);
+        const code = data.current_weather.weathercode;
 
-let label = "CLIMA EN VIVO";
-let icon = "☁️";
+        let label = "CLIMA EN VIVO";
+        let icon = "☁️";
 
-if (code === 0) {
-  label = "DESPEJADO";
-  icon = "☀️";
-} else if (code === 1 || code === 2) {
-  label = "PARCIALMENTE NUBLADO";
-  icon = "⛅";
-} else if (code === 3) {
-  label = "NUBLADO";
-  icon = "☁️";
-} else if ([45, 48].includes(code)) {
-  label = "NIEBLA";
-  icon = "🌫️";
-} else if ([51,53,55,61,63,65,80,81,82].includes(code)) {
-  label = "LLUVIA";
-  icon = "🌧️";
-} else if ([71,73,75,77,85,86].includes(code)) {
-  label = "NIEVE";
-  icon = "❄️";
-} else if ([95,96,99].includes(code)) {
-  label = "TORMENTA";
-  icon = "⛈️";
-}
+        if (code === 0) {
+          label = "DESPEJADO";
+          icon = "☀️";
+        } else if (code === 1 || code === 2) {
+          label = "PARCIALMENTE NUBLADO";
+          icon = "⛅";
+        } else if (code === 3) {
+          label = "NUBLADO";
+          icon = "☁️";
+        } else if ([45, 48].includes(code)) {
+          label = "NIEBLA";
+          icon = "🌫️";
+        } else if ([51,53,55,61,63,65,80,81,82].includes(code)) {
+          label = "LLUVIA";
+          icon = "🌧️";
+        } else if ([71,73,75,77,85,86].includes(code)) {
+          label = "NIEVE";
+          icon = "❄️";
+        } else if ([95,96,99].includes(code)) {
+          label = "TORMENTA";
+          icon = "⛈️";
+        }
 
-document.getElementById("temp").innerText = currentTemp + "°C";
-document.getElementById("cond").innerText = icon + " " + label;
-document.getElementById("range").innerText = "SAN FERNANDO, CL";
-document.getElementById("weatherExtra").innerText = "H " + maxTemp + "° / L " + minTemp + "°";
+        document.getElementById("temp").innerText = currentTemp + "°C";
+        document.getElementById("cond").innerText = icon + " " + label;
+        document.getElementById("range").innerText = "SAN FERNANDO, CL";
+        document.getElementById("weatherExtra").innerText = "H " + maxTemp + "° / L " + minTemp + "°";
 
-}catch(e){
-document.getElementById("temp").innerText = "--°C";
-document.getElementById("cond").innerText = "ERROR WEATHER";
-document.getElementById("range").innerText = "NO WEATHER DATA";
-document.getElementById("weatherExtra").innerText = "H --° / L --°";
-}
-}
-
-    <section class="panel">
-  <div class="panel-label">AGENDA</div>
-
-  <div id="nextEvent" style="font-size:22px; margin-top:10px;">
-    SIN EVENTOS
-  </div>
-</section>
-
-async function loadNews(){
-try{
-const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
-const res = await fetch(url);
-const data = await res.json();
-
-if (!data.items || !data.items.length) {
-  throw new Error("No news items");
-}
-
-const keywords = ["war", "attack", "explosion", "crash", "earthquake"];
-let breaking = null;
-
-data.items.forEach(function(item){
-  const title = item.title.toLowerCase();
-  if (keywords.some(function(k){ return title.includes(k); })) {
-    if (!breaking) {
-      breaking = item.title;
+      } catch (e) {
+        document.getElementById("temp").innerText = "--°C";
+        document.getElementById("cond").innerText = "ERROR WEATHER";
+        document.getElementById("range").innerText = "NO WEATHER DATA";
+        document.getElementById("weatherExtra").innerText = "H --° / L --°";
+      }
     }
-  }
-});
 
-const b = document.getElementById("breaking");
+    async function loadNews() {
+      try {
+        const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
+        const res = await fetch(url);
+        const data = await res.json();
 
-if (breaking) {
-b.style.display = "block";
-b.innerText = "🚨 NOTICIA URGENTE: " + breaking;
+        if (!data.items || !data.items.length) {
+          throw new Error("No news items");
+        }
 
-setTimeout(function(){
-b.style.display = "none";
-}, 15000);
+        const keywords = ["war", "attack", "explosion", "crash", "earthquake"];
+        let breaking = null;
 
-} else {
-b.style.display = "none";
-}
+        data.items.forEach(function(item) {
+          const title = item.title.toLowerCase();
+          if (keywords.some(function(k) { return title.includes(k); })) {
+            if (!breaking) {
+              breaking = item.title;
+            }
+          }
+        });
 
-const text = data.items
-.map(function(x){ return "▸ " + x.title; })
-.join("        ");
+        const b = document.getElementById("breaking");
 
-document.getElementById("ticker").innerText = text;
+        if (breaking) {
+          b.style.display = "block";
+          b.innerText = "🚨 NOTICIA URGENTE: " + breaking;
 
-}catch(e){
-document.getElementById("ticker").innerText = "ERROR NEWS";
-}
-}
+          setTimeout(function() {
+            b.style.display = "none";
+          }, 15000);
+        } else {
+          b.style.display = "none";
+        }
+
+        const text = data.items
+          .map(function(x) { return "▸ " + x.title; })
+          .join("        ");
+
+        document.getElementById("ticker").innerText = text;
+
+      } catch (e) {
+        document.getElementById("ticker").innerText = "ERROR NEWS";
+      }
+    }
 
     updateClock();
     setInterval(updateClock, 1000);
