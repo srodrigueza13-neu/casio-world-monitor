@@ -28,11 +28,9 @@ try{
 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true");
 const data = await res.json();
 
-```
 document.getElementById("temp").innerText = Math.round(data.current_weather.temperature) + "°C";
 document.getElementById("cond").innerText = "LIVE WEATHER";
 document.getElementById("range").innerText = "SAN FERNANDO, CL";
-```
 
 }catch(e){
 document.getElementById("temp").innerText = "--°C";
@@ -40,11 +38,13 @@ document.getElementById("cond").innerText = "ERROR WEATHER";
 document.getElementById("range").innerText = "NO WEATHER DATA";
 }
 }
+
 const events = [
 { time: "16:00", text: "Comprar Pernos de Anclaje" },
 { time: "17:30", text: "Llevar lata a Mora" },
 { time: "18:00", text: "Enviar correos despacho" }
 ];
+
 function updateNextEvent(){
 const now = new Date();
 const current = now.getHours() * 60 + now.getMinutes();
@@ -55,11 +55,9 @@ events.forEach(function(e){
 const parts = e.time.split(":");
 const minutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
 
-```
 if (minutes >= current && !next) {
   next = e;
 }
-```
 
 });
 
@@ -79,7 +77,6 @@ const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent
 const res = await fetch(url);
 const data = await res.json();
 
-```
 if (!data.items || !data.items.length) {
   throw new Error("No news items");
 }
