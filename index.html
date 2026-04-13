@@ -553,16 +553,22 @@ data.items.forEach(function(item){
 });
 
 const b = document.getElementById("breaking");
+
 if (breaking) {
-  b.style.display = "block";
-  b.innerText = "🚨 BREAKING: " + breaking;
+b.style.display = "block";
+b.innerText = "🚨 BREAKING: " + breaking;
+
+setTimeout(function(){
+b.style.display = "none";
+}, 15000);
+
 } else {
-  b.style.display = "none";
+b.style.display = "none";
 }
 
 const text = data.items
-  .map(function(x){ return "▸ " + x.title; })
-  .join("        ");
+.map(function(x){ return "▸ " + x.title; })
+.join("        ");
 
 document.getElementById("ticker").innerText = text;
 
