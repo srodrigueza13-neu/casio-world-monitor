@@ -41,6 +41,40 @@ document.getElementById("range").innerText = "NO WEATHER DATA";
 }
 }
 
+const events = [
+{ time: "16:00", text: "Comprar Pernos de Anclaje" },
+{ time: "17:30", text: "Llevar lata a Mora" },
+{ time: "18:00", text: "Enviar correos despacho" }
+];
+
+function updateNextEvent(){
+const now = new Date();
+const current = now.getHours() * 60 + now.getMinutes();
+
+let next = null;
+
+events.forEach(function(e){
+const parts = e.time.split(":");
+const minutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
+```
+if (minutes >= current && !next) {
+  next = e;
+}
+```
+
+});
+
+if (next){
+document.getElementById("nextEvent").innerText =
+next.time + " — " + next.text;
+} else {
+document.getElementById("nextEvent").innerText =
+"SIN EVENTOS RESTANTES";
+}
+}
+
+
 async function loadNews(){
 try{
 const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://feeds.bbci.co.uk/news/world/rss.xml");
@@ -97,3 +131,6 @@ loadNews();
 
 setInterval(updateClock, 1000);
 setInterval(updateWorldClocks, 1000);
+
+updateNextEvent();
+setInterval(updateNextEvent, 60000);
