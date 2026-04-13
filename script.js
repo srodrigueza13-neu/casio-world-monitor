@@ -40,13 +40,11 @@ document.getElementById("cond").innerText = "ERROR WEATHER";
 document.getElementById("range").innerText = "NO WEATHER DATA";
 }
 }
-
 const events = [
 { time: "16:00", text: "Comprar Pernos de Anclaje" },
 { time: "17:30", text: "Llevar lata a Mora" },
 { time: "18:00", text: "Enviar correos despacho" }
 ];
-
 function updateNextEvent(){
 const now = new Date();
 const current = now.getHours() * 60 + now.getMinutes();
