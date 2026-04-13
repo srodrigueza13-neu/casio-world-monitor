@@ -1,14 +1,11 @@
-export default async function handler(req, res) {
+module.exports = async function (req, res) {
 try {
-const url = "https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current=temperature_2m";
-const r = await fetch(url);
+const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current=temperature_2m");
 const data = await r.json();
 
 ```
-const temp = Math.round(data.current.temperature_2m) + "°C";
-
 res.status(200).json({
-  temp: temp,
+  temp: Math.round(data.current.temperature_2m) + "°C",
   cond: "LIVE"
 });
 ```
@@ -19,4 +16,4 @@ temp: "--°C",
 cond: "ERROR WEATHER"
 });
 }
-}
+};
