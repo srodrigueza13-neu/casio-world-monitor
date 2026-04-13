@@ -18,25 +18,18 @@ margin-top:20px;
 }
 
 .ticker-wrap {
-  overflow: hidden;
-  border: 1px solid #39414d;
-  background: #171c24;
-  padding: 14px 0;
+overflow: hidden;
+border: 1px solid #39414d;
+background: #171c24;
+padding: 10px 0;
+margin-top: 20px;
 }
 
-.ticker {
-  display: inline-block;
-  white-space: nowrap;
-  padding-left: 100%;
-  animation: scrollTicker 140s linear infinite;
-  font-size: 19px;
-  color: #dce2ea;
+#ticker {
+font-size: 19px;
+color: #dce2ea;
 }
 
-@keyframes scrollTicker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
 .world-clock{
 margin-top:10px;
 font-size:16px;
