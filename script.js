@@ -52,12 +52,20 @@ if (!data.items || !data.items.length) {
   throw new Error("No news items");
 }
 
-const text = data.items
-  .slice(0,8)
-  .map(function(x){ return "▸ " + x.title; })
-  .join("   ");
+let newsList = data.items.slice(0, 8);
+let index = 0;
 
-document.getElementById("ticker").innerText = text;
+function showNextNews() {
+document.getElementById("ticker").innerText =
+"▸ " + newsList[index].title;
+
+index++;
+if (index >= newsList.length) index = 0;
+}
+
+showNextNews();
+setInterval(showNextNews, 5000);
+
 ```
 
 }catch(e){
