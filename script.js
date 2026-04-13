@@ -10,6 +10,19 @@ document.getElementById("m").innerText = pad(d.getMinutes());
 document.getElementById("date").innerText = d.toDateString();
 }
 
+function updateWorldClocks(){
+const now = new Date();
+
+const tokyo = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+const madrid = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Madrid" }));
+
+document.getElementById("tokyo").innerText =
+"TOKYO " + pad(tokyo.getHours()) + ":" + pad(tokyo.getMinutes());
+
+document.getElementById("madrid").innerText =
+"MADRID " + pad(madrid.getHours()) + ":" + pad(madrid.getMinutes());
+}
+
 async function loadWeather(){
 try{
 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.58&longitude=-70.99&current_weather=true");
@@ -17,12 +30,14 @@ const data = await res.json();
 
 ```
 document.getElementById("temp").innerText = Math.round(data.current_weather.temperature) + "°C";
-document.getElementById("cond").innerText = "LIVE";
+document.getElementById("cond").innerText = "LIVE WEATHER";
+document.getElementById("range").innerText = "SAN FERNANDO, CL";
 ```
 
 }catch(e){
 document.getElementById("temp").innerText = "--°C";
 document.getElementById("cond").innerText = "ERROR WEATHER";
+document.getElementById("range").innerText = "NO WEATHER DATA";
 }
 }
 
@@ -51,21 +66,9 @@ document.getElementById("ticker").innerText = "ERROR NEWS";
 }
 
 updateClock();
-function updateWorldClocks(){
-const now = new Date();
-
-const tokyo = new Date(now.toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
-const madrid = new Date(now.toLocaleString("en-US",{timeZone:"Europe/Madrid"}));
-
-document.getElementById("tokyo").innerText =
-"TOKYO " + tokyo.getHours().toString().padStart(2,"0") + ":" + tokyo.getMinutes().toString().padStart(2,"0");
-
-document.getElementById("madrid").innerText =
-"MADRID " + madrid.getHours().toString().padStart(2,"0") + ":" + madrid.getMinutes().toString().padStart(2,"0");
-}
-setInterval(updateWorldClocks,1000);
 updateWorldClocks();
-
-
 loadWeather();
 loadNews();
+
+setInterval(updateClock, 1000);
+setInterval(updateWorldClocks, 1000);
