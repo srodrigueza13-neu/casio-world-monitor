@@ -558,10 +558,10 @@ if (breaking) {
 }
 
 const text = data.items
-.map(function(x){ return "▸ " + x.title; })
-.join("        ");
+  .map(function(x){ return "▸ " + x.title; })
+  .join("        ");
 
-document.getElementById("ticker").innerText = text + "        " + text;
+document.getElementById("ticker").innerText = text;
 
 
 }catch(e){
