@@ -159,8 +159,6 @@ next.time + " — " + next.text;
 } else {
 document.getElementById("nextEvent").innerText =
 "MAÑANA " + events[0].time + " — " + events[0].text;
-
+}
+}
 document.getElementById("nextEvent").innerText = "PRUEBA AGENDA";
-
-}
-}
