@@ -819,30 +819,33 @@ async function loadContractsReminder() {
       eventsList.innerText = "ERROR AL CARGAR EVENTOS";
     }
   }
-  async function loadOrderAlert() {
+ async function loadOrderAlert() {
+  const alertEl = document.getElementById("orderAlert");
+  const metaEl = document.getElementById("orderAlertMeta");
+
+  if (alertEl) alertEl.innerText = "CARGANDO ALERTAS";
+  if (metaEl) metaEl.innerText = "TEST";
+
   try {
     const res = await fetch(ORDER_ALERT_URL, { cache: "no-store" });
     const data = await res.json();
 
-    const alertEl = document.getElementById("orderAlert");
-    const metaEl = document.getElementById("orderAlertMeta");
+    console.log("ORDER ALERT DATA:", data);
 
     if (!alertEl || !metaEl) return;
 
     if (data && data.has_new_order === true) {
       alertEl.innerText = "TIENES UN NUEVO PEDIDO";
-      metaEl.innerText = data.checked_at ? `REVISADO ${data.checked_at}` : "--";
+      metaEl.innerText = data.checked_at ? `REVISADO ${data.checked_at}` : "SIN checked_at";
     } else {
       alertEl.innerText = "SIN ALERTAS";
-      metaEl.innerText = data && data.checked_at ? `REVISADO ${data.checked_at}` : "--";
+      metaEl.innerText = data && data.checked_at ? `REVISADO ${data.checked_at}` : "SIN checked_at";
     }
 
   } catch (e) {
-    const alertEl = document.getElementById("orderAlert");
-    const metaEl = document.getElementById("orderAlertMeta");
-
+    console.log("ERROR ALERTAS:", e);
     if (alertEl) alertEl.innerText = "ERROR ALERTAS";
-    if (metaEl) metaEl.innerText = "--";
+    if (metaEl) metaEl.innerText = "CATCH";
   }
 }
 }
