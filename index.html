@@ -494,6 +494,23 @@ align-items: center;
   .events-list {
     font-size: 15px;
   }
+  .alerts-panel {
+  margin-top: 16px;
+  min-height: 120px;
+}
+
+.alert-message {
+  font-size: 28px;
+  line-height: 1.15;
+  color: #f0f4f8;
+}
+
+.alert-meta {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #aeb8c5;
+  letter-spacing: 1px;
+}
 }
   </style>
 </head>
@@ -509,33 +526,39 @@ align-items: center;
 
 
       <div class="main-grid">
-        <section class="clock-panel panel">
-          <div class="panel-label">HORA LOCAL</div>
+       <section class="clock-panel panel">
+  <div class="panel-label">HORA LOCAL</div>
 
-          <div class="clock">
-            <div class="flip-group">
-              <div class="flip-card">
-                <div class="flip-top" id="h">00</div>
-              </div>
+  <div class="clock">
+    <div class="flip-group">
+      <div class="flip-card">
+        <div class="flip-top" id="h">00</div>
+      </div>
 
-              <div class="separator">:</div>
+      <div class="separator">:</div>
 
-              <div class="flip-card">
-                <div class="flip-top" id="m">00</div>
-              </div>
-            </div>
+      <div class="flip-card">
+        <div class="flip-top" id="m">00</div>
+      </div>
+    </div>
 
-            <div class="date-row">
-              <div class="date-chip" id="weekday">SUN</div>
-              <div class="date-chip" id="date">12 APR 2026</div>
-            </div>
+    <div class="date-row">
+      <div class="date-chip" id="weekday">SUN</div>
+      <div class="date-chip" id="date">12 APR 2026</div>
+    </div>
 
-            <div class="world-clock">
-              <div id="tokyo">TOKYO --:--</div>
-              <div id="madrid">MADRID --:--</div>
-            </div>
-          </div>
-        </section>
+    <div class="world-clock">
+      <div id="tokyo">TOKYO --:--</div>
+      <div id="madrid">MADRID --:--</div>
+    </div>
+  </div>
+
+  <section class="panel alerts-panel">
+    <div class="panel-label">ALERTAS</div>
+    <div id="orderAlert" class="alert-message">SIN ALERTAS</div>
+    <div id="orderAlertMeta" class="alert-meta">--</div>
+  </section>
+</section>
 
         <section class="info-column">
           <section class="panel climate-panel">
@@ -804,6 +827,8 @@ async function loadContractsReminder() {
   loadWeather();
   loadNews();
   loadContractsReminder();
+  loadOrderAlert();
+  setInterval(loadOrderAlert, 3600000);
 
   setInterval(loadContractsReminder, 60000);
 </script>
