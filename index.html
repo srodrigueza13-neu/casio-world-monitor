@@ -776,7 +776,7 @@ async function loadContractsReminder() {
 
     const eventsList = document.getElementById("eventsList");
     if (eventsList) {
-      const lines = data.items.slice(0, 5).map(function(ev) {
+      const lines = data.items.slice(0, 3).map(function(ev) {
         const d = getDaysUntil(ev.fecha);
 
         let when = "";
@@ -788,9 +788,8 @@ async function loadContractsReminder() {
           when = `EN ${d} DÍAS`;
         }
 
-        return `${formatContractDatePretty(ev.fecha)} · ${ev.categoria}
-${ev.nombre.toUpperCase()} — ${ev.referencia.toUpperCase()}
-${when}`;
+   return `${formatContractDatePretty(ev.fecha)} · ${ev.categoria}
+${ev.nombre.toUpperCase()} — ${ev.referencia.toUpperCase()} · ${when}`;
       });
 
       eventsList.innerText = lines.join("\n\n");
