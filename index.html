@@ -387,6 +387,112 @@ align-items: center;
         grid-template-columns: 1fr;
       }
     }
+    .info-column {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 16px;
+}
+
+.clock-panel {
+  min-height: 340px;
+}
+
+.flip-card {
+  width: 140px;
+  height: 150px;
+}
+
+.flip-top {
+  font-size: 88px;
+  letter-spacing: -4px;
+}
+
+.separator {
+  font-size: 60px;
+  transform: translateY(-6px);
+}
+
+.date-chip {
+  font-size: 16px;
+  padding: 10px 14px;
+}
+
+.world-clock div {
+  font-size: 16px;
+  padding: 10px 12px;
+}
+
+.climate-panel {
+  min-height: 180px;
+}
+
+.temp {
+  font-size: 58px;
+}
+
+.condition {
+  font-size: 22px;
+}
+
+.event-highlight-panel {
+  min-height: 170px;
+}
+
+.event-date {
+  margin-top: 10px;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #d8e0ea;
+}
+
+.event-title {
+  margin-top: 10px;
+  font-size: 30px;
+  line-height: 1.1;
+  color: #f0f4f8;
+  word-break: break-word;
+}
+
+.event-meta {
+  margin-top: 12px;
+  font-size: 17px;
+  color: #aeb8c5;
+}
+
+.events-panel {
+  min-height: 300px;
+}
+
+.events-list {
+  margin-top: 10px;
+  font-size: 17px;
+  line-height: 1.55;
+  white-space: pre-line;
+  color: #dce2ea;
+}
+
+@media (max-width: 900px) {
+  .flip-card {
+    width: 120px;
+    height: 128px;
+  }
+
+  .flip-top {
+    font-size: 72px;
+  }
+
+  .separator {
+    font-size: 48px;
+  }
+
+  .event-title {
+    font-size: 24px;
+  }
+
+  .events-list {
+    font-size: 15px;
+  }
+}
   </style>
 </head>
 <body>
@@ -632,41 +738,73 @@ align-items: center;
     return Math.floor(diffMs / 86400000);
   }
 
-  async function loadContractsReminder() {
-    try {
-      const res = await fetch(CONTRACTS_URL, { cache: "no-store" });
-      const data = await res.json();
+async function loadContractsReminder() {
+  try {
+    const res = await fetch(CONTRACTS_URL, { cache: "no-store" });
+    const data = await res.json();
 
-      if (!data.ok || !data.next) {
-        document.getElementById("contractDate").innerText = "-- --- ----";
-        document.getElementById("contractName").innerText = "SIN VENCIMIENTOS";
-        document.getElementById("contractType").innerText = "--";
-        return;
-      }
-
-      const item = data.next;
-      const days = getDaysUntil(item.fecha);
-
-      document.getElementById("contractDate").innerText = formatContractDatePretty(item.fecha);
-      document.getElementById("contractName").innerText = item.trabajador.toUpperCase();
-
-      let meta = item.tipo.toUpperCase();
-      if (days === 0) {
-        meta += " · HOY";
-      } else if (days === 1) {
-        meta += " · EN 1 DÍA";
-      } else if (days > 1) {
-        meta += ` · EN ${days} DÍAS`;
-      }
-
-      document.getElementById("contractType").innerText = meta;
-
-    } catch (e) {
+    if (!data.ok || !data.next) {
       document.getElementById("contractDate").innerText = "-- --- ----";
-      document.getElementById("contractName").innerText = "ERROR";
+      document.getElementById("contractName").innerText = "SIN EVENTOS";
       document.getElementById("contractType").innerText = "--";
+
+      const eventsList = document.getElementById("eventsList");
+      if (eventsList) {
+        eventsList.innerText = "SIN EVENTOS PRÓXIMOS";
+      }
+      return;
+    }
+
+    const item = data.next;
+    const days = getDaysUntil(item.fecha);
+
+    document.getElementById("contractDate").innerText = formatContractDatePretty(item.fecha);
+    document.getElementById("contractName").innerText = item.nombre.toUpperCase();
+
+    let meta = item.referencia.toUpperCase();
+    if (days === 0) {
+      meta += " · HOY";
+    } else if (days === 1) {
+      meta += " · EN 1 DÍA";
+    } else if (days > 1) {
+      meta += ` · EN ${days} DÍAS`;
+    }
+
+    document.getElementById("contractType").innerText = meta;
+
+    const eventsList = document.getElementById("eventsList");
+    if (eventsList) {
+      const lines = data.items.slice(0, 5).map(function(ev) {
+        const d = getDaysUntil(ev.fecha);
+
+        let when = "";
+        if (d === 0) {
+          when = "HOY";
+        } else if (d === 1) {
+          when = "EN 1 DÍA";
+        } else {
+          when = `EN ${d} DÍAS`;
+        }
+
+        return `${formatContractDatePretty(ev.fecha)} · ${ev.categoria}
+${ev.nombre.toUpperCase()} — ${ev.referencia.toUpperCase()}
+${when}`;
+      });
+
+      eventsList.innerText = lines.join("\n\n");
+    }
+
+  } catch (e) {
+    document.getElementById("contractDate").innerText = "-- --- ----";
+    document.getElementById("contractName").innerText = "ERROR";
+    document.getElementById("contractType").innerText = "--";
+
+    const eventsList = document.getElementById("eventsList");
+    if (eventsList) {
+      eventsList.innerText = "ERROR AL CARGAR EVENTOS";
     }
   }
+}
 
   updateClock();
   setInterval(updateClock, 1000);
