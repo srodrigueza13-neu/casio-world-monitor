@@ -774,21 +774,14 @@ async function loadContractsReminder() {
 
     document.getElementById("contractType").innerText = meta;
 
-    const eventsList = document.getElementById("eventsList");
+   const eventsList = document.getElementById("eventsList");
     if (eventsList) {
       const lines = data.items.slice(0, 2).map(function(ev) {
         const d = getDaysUntil(ev.fecha);
+        let when = (d === 0) ? "HOY" : (d === 1) ? "EN 1 DÍA" : `EN ${d} DÍAS`;
 
-        let when = "";
-        if (d === 0) {
-          when = "HOY";
-        } else if (d === 1) {
-          when = "EN 1 DÍA";
-        } else {
-          when = `EN ${d} DÍAS`;
-        }
-
- return `${formatContractDatePretty(ev.fecha)} · ${ev.nombre.toUpperCase()} — ${ev.referencia.toUpperCase()} · ${when}`;
+        return `${formatContractDatePretty(ev.fecha)} · ${ev.nombre.toUpperCase()} — ${ev.referencia.toUpperCase()} · ${when}`;
+      });
 
       eventsList.innerText = lines.join("\n\n");
     }
