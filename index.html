@@ -615,7 +615,7 @@ align-items: center;
 
 <script>
   const CONTRACTS_URL = "https://script.google.com/macros/s/AKfycbxV4kYVv-0pazY3iGCBdGb2Xq2pLKaOiFuxq-4eXUorJh6RiAxlE5XdslCfT9CA5l02/exec";
-
+const ORDER_ALERT_URL = "https://www.neumacenter.cl/wp-json/nc-dashboard/v1/order-alert";
   function pad(n) {
     return String(n).padStart(2, "0");
   }
@@ -819,6 +819,32 @@ async function loadContractsReminder() {
       eventsList.innerText = "ERROR AL CARGAR EVENTOS";
     }
   }
+  async function loadOrderAlert() {
+  try {
+    const res = await fetch(ORDER_ALERT_URL, { cache: "no-store" });
+    const data = await res.json();
+
+    const alertEl = document.getElementById("orderAlert");
+    const metaEl = document.getElementById("orderAlertMeta");
+
+    if (!alertEl || !metaEl) return;
+
+    if (data && data.has_new_order === true) {
+      alertEl.innerText = "TIENES UN NUEVO PEDIDO";
+      metaEl.innerText = data.checked_at ? `REVISADO ${data.checked_at}` : "--";
+    } else {
+      alertEl.innerText = "SIN ALERTAS";
+      metaEl.innerText = data && data.checked_at ? `REVISADO ${data.checked_at}` : "--";
+    }
+
+  } catch (e) {
+    const alertEl = document.getElementById("orderAlert");
+    const metaEl = document.getElementById("orderAlertMeta");
+
+    if (alertEl) alertEl.innerText = "ERROR ALERTAS";
+    if (metaEl) metaEl.innerText = "--";
+  }
+}
 }
 
   updateClock();
@@ -828,8 +854,8 @@ async function loadContractsReminder() {
   loadNews();
   loadContractsReminder();
   loadOrderAlert();
+  
   setInterval(loadOrderAlert, 3600000);
-
   setInterval(loadContractsReminder, 60000);
 </script>
 </body>
