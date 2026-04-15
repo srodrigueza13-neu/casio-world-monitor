@@ -512,6 +512,24 @@ align-items: center;
   .events-list {
     font-size: 15px;
   }
+  .sports-panel {
+  margin-top: 16px;
+  min-height: 120px;
+}
+
+.sport-when {
+  font-size: 22px;
+  line-height: 1.15;
+  color: #d8e0ea;
+  letter-spacing: 1px;
+}
+
+.sport-event {
+  margin-top: 10px;
+  font-size: 24px;
+  line-height: 1.2;
+  color: #f0f4f8;
+}
 }
   </style>
 </head>
@@ -554,10 +572,16 @@ align-items: center;
     </div>
   </div>
 
-  <section class="panel alerts-panel">
+   <section class="panel alerts-panel">
     <div class="panel-label">ALERTAS</div>
     <div id="orderAlert" class="alert-message">SIN ALERTAS</div>
     <div id="orderAlertMeta" class="alert-meta">--</div>
+  </section>
+
+  <section class="panel sports-panel">
+    <div class="panel-label">DEPORTE</div>
+    <div id="sportWhen" class="sport-when">SIN EVENTOS</div>
+    <div id="sportEvent" class="sport-event">--</div>
   </section>
 </section>
 
@@ -616,7 +640,8 @@ align-items: center;
 
 <script>
   const CONTRACTS_URL = "https://script.google.com/macros/s/AKfycbxV4kYVv-0pazY3iGCBdGb2Xq2pLKaOiFuxq-4eXUorJh6RiAxlE5XdslCfT9CA5l02/exec";
-const ORDER_ALERT_URL = "https://www.neumacenter.cl/wp-json/nc-dashboard/v1/order-alert";
+  const ORDER_ALERT_URL = "https://www.neumacenter.cl/wp-json/nc-dashboard/v1/order-alert";
+  const SPORTS_URL = "https://script.google.com/macros/s/AKfycbxYOVRqGEXuX9sBpbfgmeCyuxbf3wUC2xJ78gL2fUmJyr174v7h7eURtI4IXCkEbDo/exec?mode=deportes";
   function pad(n) {
     return String(n).padStart(2, "0");
   }
@@ -848,17 +873,57 @@ async function loadOrderAlert() {
     if (metaEl) metaEl.innerText = "--";
   }
 }
+function formatSportLabel(dateStr, timeStr) {
+  const [day, month, year] = dateStr.split("-").map(Number);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(year, month - 1, day);
+  const diffDays = Math.floor((target - today) / 86400000);
 
- updateClock();
+  if (diffDays === 0) return `HOY ${timeStr}`;
+  if (diffDays === 1) return `MAÑANA ${timeStr}`;
+  return `${formatContractDatePretty(dateStr)} · ${timeStr}`;
+}
+
+async function loadSportsEvent() {
+  try {
+    const res = await fetch(SPORTS_URL, { cache: "no-store" });
+    const data = await res.json();
+
+    const whenEl = document.getElementById("sportWhen");
+    const eventEl = document.getElementById("sportEvent");
+
+    if (!whenEl || !eventEl) return;
+
+    if (!data || !data.ok || !data.next) {
+      whenEl.innerText = "SIN EVENTOS";
+      eventEl.innerText = "--";
+      return;
+    }
+
+    whenEl.innerText = formatSportLabel(data.next.fecha, data.next.hora);
+    eventEl.innerText = data.next.evento.toUpperCase();
+
+  } catch (e) {
+    const whenEl = document.getElementById("sportWhen");
+    const eventEl = document.getElementById("sportEvent");
+
+    if (whenEl) whenEl.innerText = "ERROR DEPORTE";
+    if (eventEl) eventEl.innerText = "--";
+  }
+}
+updateClock();
 setInterval(updateClock, 1000);
 
 loadWeather();
 loadNews();
 loadContractsReminder();
 loadOrderAlert();
+loadSportsEvent();
 
 setInterval(loadOrderAlert, 3600000);
 setInterval(loadContractsReminder, 60000);
+setInterval(loadSportsEvent, 900000);
 </script>
 </body>
 </html>
