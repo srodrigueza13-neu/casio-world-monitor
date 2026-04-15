@@ -533,8 +533,12 @@ align-items: center;
 
 #sportEvent2 {
   margin-top: 18px;
-  font-size: 18px;
+  padding-top: 10px;
+  border-top: 1px solid #2b313c;
+  font-size: 16px;
+  line-height: 1.35;
   color: #aeb8c5;
+  white-space: pre-line;
 }
 }
   </style>
@@ -923,11 +927,11 @@ async function loadSportsEvent() {
     whenEl.innerText = formatSportLabel(first.fecha, first.hora);
     eventEl.innerText = first.evento.toUpperCase();
 
-    if (second) {
-      eventEl2.innerText = `${formatSportLabel(second.fecha, second.hora)} · ${second.evento.toUpperCase()}`;
-    } else {
-      eventEl2.innerText = "";
-    }
+   if (second) {
+  eventEl2.innerText = `SIGUIENTE: ${formatSportLabel(second.fecha, second.hora)}\n${second.evento.toUpperCase()}`;
+} else {
+  eventEl2.innerText = "";
+}
 
   } catch (e) {
     const whenEl = document.getElementById("sportWhen");
