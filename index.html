@@ -578,11 +578,12 @@ align-items: center;
     <div id="orderAlertMeta" class="alert-meta">--</div>
   </section>
 
-  <section class="panel sports-panel">
-    <div class="panel-label">DEPORTE</div>
-    <div id="sportWhen" class="sport-when">SIN EVENTOS</div>
-    <div id="sportEvent" class="sport-event">--</div>
-  </section>
+ <section class="panel sports-panel">
+  <div class="panel-label">DEPORTE</div>
+  <div id="sportWhen" class="sport-when">SIN EVENTOS</div>
+  <div id="sportEvent" class="sport-event">--</div>
+  <div id="sportEvent2" class="sport-event">--</div>
+</section>
 </section>
 
         <section class="info-column">
@@ -892,24 +893,44 @@ async function loadSportsEvent() {
 
     const whenEl = document.getElementById("sportWhen");
     const eventEl = document.getElementById("sportEvent");
+    const eventEl2 = document.getElementById("sportEvent2");
 
-    if (!whenEl || !eventEl) return;
+    if (!whenEl || !eventEl || !eventEl2) return;
 
-    if (!data || !data.ok || !data.next) {
+    if (!data || !data.ok || !data.next || !data.items || !data.items.length) {
       whenEl.innerText = "SIN EVENTOS";
       eventEl.innerText = "--";
+      eventEl2.innerText = "";
       return;
     }
 
-    whenEl.innerText = formatSportLabel(data.next.fecha, data.next.hora);
-    eventEl.innerText = data.next.evento.toUpperCase();
+    const first = data.items[0] || null;
+    const second = data.items[1] || null;
+
+    if (!first) {
+      whenEl.innerText = "SIN EVENTOS";
+      eventEl.innerText = "--";
+      eventEl2.innerText = "";
+      return;
+    }
+
+    whenEl.innerText = formatSportLabel(first.fecha, first.hora);
+    eventEl.innerText = first.evento.toUpperCase();
+
+    if (second) {
+      eventEl2.innerText = `${formatSportLabel(second.fecha, second.hora)} · ${second.evento.toUpperCase()}`;
+    } else {
+      eventEl2.innerText = "";
+    }
 
   } catch (e) {
     const whenEl = document.getElementById("sportWhen");
     const eventEl = document.getElementById("sportEvent");
+    const eventEl2 = document.getElementById("sportEvent2");
 
     if (whenEl) whenEl.innerText = "ERROR DEPORTE";
     if (eventEl) eventEl.innerText = "--";
+    if (eventEl2) eventEl2.innerText = "";
   }
 }
 updateClock();
