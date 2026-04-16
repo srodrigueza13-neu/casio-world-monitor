@@ -576,10 +576,12 @@ align-items: center;
       <div class="date-chip" id="date">12 APR 2026</div>
     </div>
 
-    <div class="world-clock">
-      <div id="tokyo">TOKYO --:--</div>
-      <div id="madrid">MADRID --:--</div>
-    </div>
+   <div class="world-clock">
+  <div id="sydney">SYDNEY --:--</div>
+  <div id="madrid">MADRID --:--</div>
+  <div id="newyork">NEW YORK --:--</div>
+  <div id="losangeles">LOS ANGELES --:--</div>
+</div>
   </div>
 
    <section class="panel alerts-panel">
@@ -686,8 +688,10 @@ align-items: center;
     document.getElementById("weekday").innerText = weekdays[d.getDay()];
     document.getElementById("date").innerText = formatDate(d);
 
-    document.getElementById("tokyo").innerText = formatWorldTime("Asia/Tokyo","TOKYO");
-    document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid","MADRID");
+    document.getElementById("sydney").innerText = formatWorldTime("Australia/Sydney","SYDNEY");
+document.getElementById("madrid").innerText = formatWorldTime("Europe/Madrid","MADRID");
+document.getElementById("newyork").innerText = formatWorldTime("America/New_York","NEW YORK");
+document.getElementById("losangeles").innerText = formatWorldTime("America/Los_Angeles","LOS ANGELES");
   }
 
   async function loadWeather() {
